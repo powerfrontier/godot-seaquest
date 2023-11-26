@@ -1,11 +1,50 @@
-[gd_scene load_steps=3 format=3 uid="uid://c3ftksk14xtw"]
+[gd_scene load_steps=8 format=3 uid="uid://c3ftksk14xtw"]
 
 [ext_resource type="PackedScene" uid="uid://da3v4yxkpn81r" path="res://player/player.tscn" id="1_dki27"]
-[ext_resource type="PackedScene" uid="uid://lgnheolbeefr" path="res://enemies/enemy_spawner/enemy_spawner.tscn" id="3_xdfs0"]
+[ext_resource type="PackedScene" uid="uid://ibwm6tjkkvoe" path="res://user_interface/people-count/people_count.tscn" id="3_fevad"]
+[ext_resource type="PackedScene" uid="uid://lgnheolbeefr" path="res://enemies/spawner/spawner.tscn" id="3_xdfs0"]
+[ext_resource type="Texture2D" uid="uid://btnr30bafou52" path="res://user_interface/oxygen-bar/oxygen_bar_under.png" id="4_tjx67"]
+[ext_resource type="Texture2D" uid="uid://cy1fxgmayb1ai" path="res://user_interface/oxygen-bar/oxygen_bar_progress.png" id="5_d84ss"]
+[ext_resource type="Script" path="res://user_interface/oxygen-bar/oxygen_bar.gd" id="6_i06r1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vuw4m"]
+size = Vector2(262, 20)
 
 [node name="Game" type="Node"]
 
 [node name="Player" parent="." instance=ExtResource("1_dki27")]
-position = Vector2(114, 72)
+position = Vector2(121, 77)
 
-[node name="EnemySpawner" parent="." instance=ExtResource("3_xdfs0")]
+[node name="Spawner" parent="." instance=ExtResource("3_xdfs0")]
+
+[node name="OxygenZone" type="Area2D" parent="."]
+position = Vector2(128, 43)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OxygenZone"]
+shape = SubResource("RectangleShape2D_vuw4m")
+
+[node name="UserInterface" type="CanvasLayer" parent="."]
+
+[node name="PeopleCount" parent="UserInterface" instance=ExtResource("3_fevad")]
+position = Vector2(11, 13)
+
+[node name="OxygenBar" type="TextureProgressBar" parent="UserInterface"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -17.0
+offset_right = 50.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+nine_patch_stretch = true
+stretch_margin_left = 4
+stretch_margin_right = 4
+texture_under = ExtResource("4_tjx67")
+texture_progress = ExtResource("5_d84ss")
+script = ExtResource("6_i06r1")
+
+[connection signal="area_entered" from="OxygenZone" to="Player" method="_on_oxygen_zone_area_entered"]

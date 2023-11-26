@@ -29,6 +29,7 @@ animations = [{
 size = Vector2(15, 7.92079)
 
 [node name="PlayerBullet" type="Area2D" groups=["PlayerBullet"]]
+z_index = 1
 script = ExtResource("2_wwja0")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
