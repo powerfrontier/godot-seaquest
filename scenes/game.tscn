@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://c3ftksk14xtw"]
+[gd_scene load_steps=20 format=3 uid="uid://c3ftksk14xtw"]
 
 [ext_resource type="PackedScene" uid="uid://da3v4yxkpn81r" path="res://player/player.tscn" id="1_dki27"]
 [ext_resource type="Script" path="res://scenes/camera.gd" id="1_sybyw"]
@@ -11,6 +11,7 @@
 [ext_resource type="FontFile" uid="uid://x4flr88ygmps" path="res://user_interface/fonts/font_1.ttf" id="8_thssk"]
 [ext_resource type="FontFile" uid="uid://bcgycqdnyom4w" path="res://user_interface/fonts/font_2.ttf" id="10_l1qmv"]
 [ext_resource type="Script" path="res://user_interface/points_display/points_display.gd" id="11_jnenw"]
+[ext_resource type="Script" path="res://user_interface/game_over/game_over.gd" id="12_n0m1s"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vuw4m"]
 size = Vector2(262, 12)
@@ -162,4 +163,58 @@ horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("11_jnenw")
 
+[node name="GameOver" type="Control" parent="UserInterface"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("12_n0m1s")
+
+[node name="ColorRect" type="ColorRect" parent="UserInterface/GameOver"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.145083, 0.141176, 0.266728, 1)
+
+[node name="GameOverLabel" type="Label" parent="UserInterface/GameOver"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -23.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("8_thssk")
+text = "Game Over!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CurrentScoreLabel" type="Label" parent="UserInterface/GameOver"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = 10.0
+offset_bottom = 36.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("8_thssk")
+theme_override_font_sizes/font_size = 8
+text = "Score 
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameOverDelay" type="Timer" parent="UserInterface/GameOver"]
+one_shot = true
+
 [connection signal="area_entered" from="OxygenZone" to="Player" method="_on_oxygen_zone_area_entered"]
+[connection signal="timeout" from="UserInterface/GameOver/GameOverDelay" to="UserInterface/GameOver" method="_on_game_over_delay_timeout"]

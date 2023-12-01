@@ -10,6 +10,7 @@ const OXYGEN_DECREASE_SPEED = 2.5
 const OXYGEN_INCREASE_SPEED = 60
 const OXYGEN_MOVE_SHORE_LINE_SPEED = 50
 const OXYGEN_SHORE_LINE = 38
+const OXYGEN_HIGH_LEVEL = 80
 
 const MAX_X_POSITION = 248
 const MIN_X_POSITION = 10
@@ -22,6 +23,9 @@ const Bullet = preload("res://player/player_bullet/player_bullet.tscn")
 @onready var ReloadTimer = $ReloadTimer
 @onready var sprite = $AnimatedSprite2D
 @onready var decreasePeopleTimer = $DecreasePeopleTimer
+
+func _ready():
+	GameEvent.connect("game_over", Callable(self, "_game_over"))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -72,6 +76,8 @@ func process_shoting():
 func lose_oxygen(delta):
 	if Global.oxygen_level > 0:
 		Global.oxygen_level -= OXYGEN_DECREASE_SPEED * delta
+	else:
+		GameEvent.emit_signal("game_over")
 
 func gain_oxygen(delta):
 	if Global.oxygen_level < 100:
@@ -102,15 +108,21 @@ func remove_one_person():
 
 func _on_oxygen_zone_area_entered(area):
 	if area.is_in_group("Player"):
-		if Global.saved_people_count >= Global.MAX_CREW:
-			state = "people_refuel"
-			decreasePeopleTimer.start()
+		if Global.oxygen_level > OXYGEN_HIGH_LEVEL:
+			GameEvent.emit_signal("game_over")
 		else:
-			remove_one_person()
-			state = "oxygen_refuel"
+			if Global.saved_people_count >= Global.MAX_CREW:
+				state = "people_refuel"
+				decreasePeopleTimer.start()
+			else:
+				remove_one_person()
+				state = "oxygen_refuel"
 
 func _on_decrease_people_timer_timeout():
 	remove_one_person()
 	if Global.saved_people_count <= 0:
 		decreasePeopleTimer.stop()
 		state = "oxygen_refuel"
+
+func _game_over():
+	queue_free()
