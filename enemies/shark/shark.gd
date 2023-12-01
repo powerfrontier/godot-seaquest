@@ -21,7 +21,7 @@ func _process(delta):
 func _physics_process(delta):
 	velocity.y = sin(global_position.x * FREQUENCY + offset) * AMPLITUDE 
 	global_position +=  velocity * SPEED * delta
-	
+
 
 func _on_area_entered(area):
 	if area.is_in_group("PlayerBullet"):
