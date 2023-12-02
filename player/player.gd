@@ -2,7 +2,8 @@ extends Area2D
 
 var velocity = Vector2(0, 0)
 var can_shoot = true
-var state = "default"
+enum states {DEFAULT, OXYGEN_REFUEL, PEOPLE_REFUEL}
+var state = states.DEFAULT
 
 const SPEED = Vector2(125, 90)
 
@@ -29,20 +30,20 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if state == "default":
+	if state == states.DEFAULT:
 		process_movement_input()
 		direction_follows_input()
 		process_shoting()
 		lose_oxygen(delta)
-	elif state == "oxygen_refuel":
+	elif state == states.OXYGEN_REFUEL:
 		move_to_shore_line(delta)
 		#if global_position.y <= OXYGEN_SHORE_LINE: 
 		gain_oxygen(delta)
-	elif state == "people_refuel":
+	elif state == states.PEOPLE_REFUEL:
 		move_to_shore_line(delta)
 
 func _physics_process(delta):
-	if state == "default":
+	if state == states.DEFAULT:
 		movement(delta)
 	clamp_postion()
 	GameEvent.emit_signal("camera_follow_player", global_position.y)
@@ -77,13 +78,14 @@ func lose_oxygen(delta):
 	if Global.oxygen_level > 0:
 		Global.oxygen_level -= OXYGEN_DECREASE_SPEED * delta
 	else:
-		GameEvent.emit_signal("game_over")
+		death()
 
 func gain_oxygen(delta):
 	if Global.oxygen_level < 100:
 		Global.oxygen_level += OXYGEN_INCREASE_SPEED * delta
 	else:
-		state = "default"
+		state = states.DEFAULT
+		GameEvent.emit_signal("enemy_pause", false)
 
 func movement(delta):
 	global_position += velocity * SPEED * delta
@@ -109,20 +111,25 @@ func remove_one_person():
 func _on_oxygen_zone_area_entered(area):
 	if area.is_in_group("Player"):
 		if Global.oxygen_level > OXYGEN_HIGH_LEVEL:
-			GameEvent.emit_signal("game_over")
+			death()
 		else:
+			GameEvent.emit_signal("enemy_pause", true)
 			if Global.saved_people_count >= Global.MAX_CREW:
-				state = "people_refuel"
+				state = states.PEOPLE_REFUEL
 				decreasePeopleTimer.start()
 			else:
 				remove_one_person()
-				state = "oxygen_refuel"
+				state = states.OXYGEN_REFUEL
 
 func _on_decrease_people_timer_timeout():
 	remove_one_person()
 	if Global.saved_people_count <= 0:
 		decreasePeopleTimer.stop()
-		state = "oxygen_refuel"
+		state = states.OXYGEN_REFUEL
+
+func death():
+	GameEvent.emit_signal("enemy_pause", true)
+	GameEvent.emit_signal("game_over")
 
 func _game_over():
 	queue_free()

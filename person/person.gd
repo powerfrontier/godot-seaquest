@@ -2,10 +2,15 @@ extends Area2D
 
 var velocity = Vector2(1, 0)
 var point_value = 30
+enum states {DEFAULT, PAUSE}
+var state = states.DEFAULT
 
 const SPEED = 25
 
 @onready var sprite = $AnimatedSprite2D
+
+func _ready():
+	GameEvent.connect("enemy_pause", Callable(self, "_enemy_pause"))
 
 
 func _process(delta):
@@ -13,7 +18,8 @@ func _process(delta):
 		queue_free()
 
 func _physics_process(delta):
-	global_position += velocity * SPEED * delta
+	if state == states.DEFAULT:
+		global_position += velocity * SPEED * delta
 
 func flip_direction():
 	velocity = -velocity
@@ -28,3 +34,8 @@ func _on_area_entered(area):
 		GameEvent.emit_signal("update_points")
 		queue_free()
 
+func _enemy_pause(pause):
+	if pause:
+		state = states.PAUSE
+	else:
+		state = states.DEFAULT

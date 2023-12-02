@@ -3,17 +3,20 @@ extends Node2D
 
 @onready var left = $Left
 @onready var right = $Right
+@onready var enemy_timer = $EnemyTimer
+@onready var person_timer = $PersonTimer
+
 const shark = preload("res://enemies/shark/shark.tscn")
 const person = preload("res://person/person.tscn")
 
+func _ready():
+	GameEvent.connect("enemy_pause", Callable(self, "_pause_spawing"))
 
 func _on_enemy_timer_timeout():
 	for i in range(4):
 		#print(i)
 		spawn_enemy(i+1)
-		
-	
-	
+
 func spawn_enemy(level):
 	var rnd_spawn_side = bool(randi_range(0,1))
 	var spawn_side = left
@@ -46,3 +49,18 @@ func _on_person_timer_timeout():
 	var spawn_position = spawn_side.get_node(str(spawn_marker)).global_position	
 	
 	person_instance.global_position = spawn_position
+
+
+func _on_initial_delay_timer_timeout():
+	_on_enemy_timer_timeout()
+	_on_person_timer_timeout()
+	enemy_timer.start()
+	person_timer.start()
+
+func _pause_spawing(pause):
+	if pause:
+		enemy_timer.stop()
+		person_timer.stop()
+	else:
+		enemy_timer.start()
+		person_timer.start()
