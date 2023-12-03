@@ -86,6 +86,7 @@ func gain_oxygen(delta):
 	else:
 		state = states.DEFAULT
 		GameEvent.emit_signal("enemy_pause", false)
+		sprite.play("default")
 
 func movement(delta):
 	global_position += velocity * SPEED * delta
@@ -110,6 +111,7 @@ func remove_one_person():
 
 func _on_oxygen_zone_area_entered(area):
 	if area.is_in_group("Player"):
+		sprite.play("flash")
 		if Global.oxygen_level > OXYGEN_HIGH_LEVEL:
 			death()
 		else:

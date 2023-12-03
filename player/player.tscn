@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://da3v4yxkpn81r"]
+[gd_scene load_steps=13 format=3 uid="uid://da3v4yxkpn81r"]
 
 [ext_resource type="Texture2D" uid="uid://ckxrj44h5exqf" path="res://player/player.png" id="1_re2e8"]
 [ext_resource type="Script" path="res://player/player.gd" id="2_nn55f"]
+[ext_resource type="Texture2D" uid="uid://bjlvtlo2m64i3" path="res://player/player_flash.png" id="3_udjd0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wr25f"]
 atlas = ExtResource("1_re2e8")
@@ -17,6 +18,22 @@ region = Rect2(48, 0, 24, 20)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tv0nv"]
 atlas = ExtResource("1_re2e8")
+region = Rect2(72, 0, 24, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l7s88"]
+atlas = ExtResource("3_udjd0")
+region = Rect2(0, 0, 24, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fl4mp"]
+atlas = ExtResource("3_udjd0")
+region = Rect2(24, 0, 24, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3077j"]
+atlas = ExtResource("3_udjd0")
+region = Rect2(48, 0, 24, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gg3hs"]
+atlas = ExtResource("3_udjd0")
 region = Rect2(72, 0, 24, 20)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_64dde"]
@@ -37,6 +54,23 @@ animations = [{
 "loop": true,
 "name": &"default",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l7s88")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fl4mp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3077j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gg3hs")
+}],
+"loop": true,
+"name": &"flash",
+"speed": 10.0
 }]
 
 [node name="Player" type="Area2D" groups=["Player"]]
@@ -51,7 +85,6 @@ polygon = PackedVector2Array(-1, -9, -1, -5, -6, -5, -7, -3, -11, -3, -11, 4, -8
 position = Vector2(0, -7.45058e-09)
 sprite_frames = SubResource("SpriteFrames_64dde")
 autoplay = "default"
-frame_progress = 0.480339
 offset = Vector2(-1, -2)
 
 [node name="ReloadTimer" type="Timer" parent="."]
