@@ -18,6 +18,7 @@ config/features=PackedStringArray("4.1", "GL Compatibility")
 
 Global="*res://global/global.gd"
 GameEvent="*res://global/game_event.gd"
+SoundManager="*res://global/sound_manager/sound_manager.gd"
 
 [display]
 

@@ -152,6 +152,10 @@ text = "Oxygen"
 horizontal_alignment = 1
 vertical_alignment = 2
 
+[node name="FlashTimer" type="Timer" parent="UserInterface/OxygenBar"]
+wait_time = 0.1
+one_shot = true
+
 [node name="PointsDisplay" type="Label" parent="UserInterface"]
 anchors_preset = 10
 anchor_right = 1.0
@@ -238,4 +242,5 @@ vertical_alignment = 1
 one_shot = true
 
 [connection signal="area_entered" from="OxygenZone" to="Player" method="_on_oxygen_zone_area_entered"]
+[connection signal="timeout" from="UserInterface/OxygenBar/FlashTimer" to="UserInterface/OxygenBar" method="_on_flash_timer_timeout"]
 [connection signal="timeout" from="UserInterface/GameOver/GameOverDelay" to="UserInterface/GameOver" method="_on_game_over_delay_timeout"]

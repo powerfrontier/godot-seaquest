@@ -1,6 +1,7 @@
 extends Node2D
 
 @onready var texture_progress = $TextureProgress
+@onready var flash_timer = $FlashTimer
 
 var previous_value = 0
 
@@ -35,3 +36,8 @@ func _physics_process(delta):
 func alert(scale_value, rotation_value):
 	scale = Vector2(scale_value, scale_value)
 	rotation_degrees = randf_range(-rotation_value, rotation_value)
+	modulate = Color(20, 20, 20)
+	flash_timer.start()
+
+func _on_flash_timer_timeout():
+	modulate = Color(1, 1, 1)

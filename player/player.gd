@@ -20,6 +20,7 @@ const MIN_Y_POSITION = OXYGEN_SHORE_LINE
 
 const BULLET_OFFSET = 7
 const Bullet = preload("res://player/player_bullet/player_bullet.tscn")
+const ShootSound = preload("res://player/player_bullet/player_shoot.ogg")
 
 @onready var ReloadTimer = $ReloadTimer
 @onready var sprite = $AnimatedSprite2D
@@ -63,6 +64,8 @@ func process_shoting():
 	if Input.is_action_pressed("shoot") and can_shoot:
 		var bullet_instance = Bullet.instantiate()
 		get_tree().current_scene.add_child(bullet_instance)
+		
+		SoundManager.play_sound(ShootSound)
 		
 		if sprite.flip_h:
 			bullet_instance.flip_direction()
