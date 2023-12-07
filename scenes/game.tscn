@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://c3ftksk14xtw"]
+[gd_scene load_steps=21 format=3 uid="uid://c3ftksk14xtw"]
 
 [ext_resource type="PackedScene" uid="uid://da3v4yxkpn81r" path="res://player/player.tscn" id="1_dki27"]
 [ext_resource type="Script" path="res://scenes/camera.gd" id="1_sybyw"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://lgnheolbeefr" path="res://enemies/spawner/spawner.tscn" id="3_xdfs0"]
 [ext_resource type="Texture2D" uid="uid://btnr30bafou52" path="res://user_interface/oxygen-bar/oxygen_bar_under.png" id="4_tjx67"]
 [ext_resource type="Texture2D" uid="uid://cy1fxgmayb1ai" path="res://user_interface/oxygen-bar/oxygen_bar_progress.png" id="5_d84ss"]
+[ext_resource type="Texture2D" uid="uid://caeigo6688nb3" path="res://scenes/environment/sand_bottom.png" id="5_fw82c"]
 [ext_resource type="Script" path="res://user_interface/oxygen-bar/oxygen_bar.gd" id="6_i06r1"]
 [ext_resource type="FontFile" uid="uid://x4flr88ygmps" path="res://user_interface/fonts/font_1.ttf" id="8_thssk"]
 [ext_resource type="FontFile" uid="uid://bcgycqdnyom4w" path="res://user_interface/fonts/font_2.ttf" id="10_l1qmv"]
@@ -103,6 +104,11 @@ material = SubResource("ShaderMaterial_2lalu")
 position = Vector2(128, 178)
 scale = Vector2(0.7, 1)
 mesh = SubResource("QuadMesh_3pthi")
+
+[node name="Ground" type="Sprite2D" parent="Environment"]
+z_index = 7
+position = Vector2(125, 219)
+texture = ExtResource("5_fw82c")
 
 [node name="UserInterface" type="CanvasLayer" parent="."]
 

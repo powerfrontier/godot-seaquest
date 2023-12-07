@@ -21,6 +21,10 @@ const MIN_Y_POSITION = OXYGEN_SHORE_LINE
 const BULLET_OFFSET = 7
 const Bullet = preload("res://player/player_bullet/player_bullet.tscn")
 const ShootSound = preload("res://player/player_bullet/player_shoot.ogg")
+const OxygenFullSound = preload("res://user_interface/oxygen-bar/full_oxygen_alert.ogg")
+const OxygenRefuelSound = preload("res://player/player_refuel_oxygen.ogg")
+const SurfaceSound = preload("res://player/player_surface.ogg")
+const OxygenExplosionSound = preload("res://player/explosion.ogg")
 
 @onready var ReloadTimer = $ReloadTimer
 @onready var sprite = $AnimatedSprite2D
@@ -65,7 +69,7 @@ func process_shoting():
 		var bullet_instance = Bullet.instantiate()
 		get_tree().current_scene.add_child(bullet_instance)
 		
-		SoundManager.play_sound(ShootSound)
+		SoundManager.play_sound_rnd_pitch(ShootSound)
 		
 		if sprite.flip_h:
 			bullet_instance.flip_direction()
@@ -90,6 +94,7 @@ func gain_oxygen(delta):
 		state = states.DEFAULT
 		GameEvent.emit_signal("enemy_pause", false)
 		sprite.play("default")
+		SoundManager.play_sound(OxygenFullSound)
 
 func movement(delta):
 	global_position += velocity * SPEED * delta
@@ -114,8 +119,10 @@ func remove_one_person():
 
 func _on_oxygen_zone_area_entered(area):
 	if area.is_in_group("Player"):
+		SoundManager.play_sound(SurfaceSound)
 		sprite.play("flash")
 		if Global.oxygen_level > OXYGEN_HIGH_LEVEL:
+			SoundManager.play_sound(OxygenExplosionSound)
 			death()
 		else:
 			GameEvent.emit_signal("enemy_pause", true)
@@ -124,17 +131,22 @@ func _on_oxygen_zone_area_entered(area):
 				decreasePeopleTimer.start()
 			else:
 				remove_one_person()
+				SoundManager.play_sound(OxygenRefuelSound)
 				state = states.OXYGEN_REFUEL
 
 func _on_decrease_people_timer_timeout():
 	remove_one_person()
 	if Global.saved_people_count <= 0:
 		decreasePeopleTimer.stop()
+		SoundManager.play_sound(OxygenRefuelSound)
 		state = states.OXYGEN_REFUEL
 
 func death():
 	GameEvent.emit_signal("enemy_pause", true)
 	GameEvent.emit_signal("game_over")
+	# Here I delete the player's death sound of the course
+	# and moved to another place because the player now (cause
+	# my modification) do differents sounds on each death
 
 func _game_over():
 	queue_free()

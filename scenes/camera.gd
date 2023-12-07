@@ -4,6 +4,7 @@ const FOLLOW_SPEED = 9
 const MIN_HEIGHT = 70
 const MAX_HEIGHT = 145
 
+
 var target_position = global_position
 
 # Called when the node enters the scene tree for the first time.

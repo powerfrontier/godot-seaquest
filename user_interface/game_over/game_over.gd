@@ -4,6 +4,8 @@ extends Control
 @onready var game_over_timer = $GameOverDelay
 @onready var highscore = $HighScoreLabel
 
+const GameOver = preload("res://player/game_over.ogg")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	GameEvent.connect("game_over", Callable(self, "_game_over_screen"))
@@ -25,3 +27,4 @@ func _game_over_screen():
 
 func _on_game_over_delay_timeout():
 	visible = true
+	SoundManager.play_sound(GameOver)

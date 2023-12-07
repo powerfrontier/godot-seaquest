@@ -9,6 +9,9 @@ const SPEED = 50
 const AMPLITUDE = 0.5
 const FREQUENCY = 0.15
 
+const SharkDeathSound = preload("res://enemies/shark/shark_death.ogg")
+const PlayerDeathSound = preload("res://player/player_death.ogg")
+
 var offset = randf_range(0, 10)
 var point_value = 25
 enum states {DEFAULT, PAUSE}
@@ -31,10 +34,12 @@ func _on_area_entered(area):
 	if area.is_in_group("PlayerBullet"):
 		Global.current_points += point_value
 		GameEvent.emit_signal("update_points")
+		SoundManager.play_sound_rnd_pitch(SharkDeathSound)
 		area.queue_free()
 		queue_free()
 	
 	if area.is_in_group("Player"):
+		SoundManager.play_sound(PlayerDeathSound)
 		area.death()
 
 func flip_direction():

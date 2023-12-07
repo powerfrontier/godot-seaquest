@@ -1,5 +1,7 @@
 extends Node2D
 
+const OxygenAlert = preload("res://user_interface/oxygen-bar/oxygen_alert.ogg")
+
 @onready var texture_progress = $TextureProgress
 @onready var flash_timer = $FlashTimer
 
@@ -38,6 +40,7 @@ func alert(scale_value, rotation_value):
 	rotation_degrees = randf_range(-rotation_value, rotation_value)
 	modulate = Color(20, 20, 20)
 	flash_timer.start()
+	SoundManager.play_sound(OxygenAlert)
 
 func _on_flash_timer_timeout():
 	modulate = Color(1, 1, 1)
