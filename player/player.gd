@@ -4,6 +4,7 @@ var velocity = Vector2(0, 0)
 var can_shoot = true
 enum states {DEFAULT, OXYGEN_REFUEL, PEOPLE_REFUEL}
 var state = states.DEFAULT
+var is_shooting = false
 
 const SPEED = Vector2(125, 90)
 
@@ -20,6 +21,8 @@ const MIN_Y_POSITION = OXYGEN_SHORE_LINE
 
 const BULLET_OFFSET = 7
 const PIECE_COUNT = 10
+
+const ROTATION_STRENGTH = 15
 
 const Bullet = preload("res://player/player_bullet/player_bullet.tscn")
 const ShootSound = preload("res://player/player_bullet/player_shoot.ogg")
@@ -42,6 +45,7 @@ func _process(delta):
 	if state == states.DEFAULT:
 		process_movement_input()
 		direction_follows_input()
+		rotate_to_movement()
 		process_shoting()
 		lose_oxygen(delta)
 	elif state == states.OXYGEN_REFUEL:
@@ -63,27 +67,43 @@ func process_movement_input():
 	velocity = velocity.normalized()
 
 func direction_follows_input():
-	if velocity.x > 0:
-		sprite.flip_h = false
-	elif velocity.x < 0:
-		sprite.flip_h = true
+	if !is_shooting:
+		if velocity.x > 0:
+			sprite.flip_h = false
+		elif velocity.x < 0:
+			sprite.flip_h = true
+
+func rotate_to_movement():
+	var rotation_target
+	if velocity.y == 0:
+		rotation_target = velocity.x * ROTATION_STRENGTH
+	else:
+		rotation_target = velocity.y * ROTATION_STRENGTH
+		if sprite.flip_h:
+			rotation_target = -rotation_target
+	
+	rotation_degrees = lerp(rotation_degrees, rotation_target, 15 * get_physics_process_delta_time())
 
 func process_shoting():
-	if Input.is_action_pressed("shoot") and can_shoot:
-		var bullet_instance = Bullet.instantiate()
-		get_tree().current_scene.add_child(bullet_instance)
-		
-		SoundManager.play_sound_rnd_pitch(ShootSound)
-		
-		if sprite.flip_h:
-			bullet_instance.flip_direction()
-			bullet_instance.global_position = global_position - Vector2(BULLET_OFFSET, 0)
-		else:	
-			bullet_instance.global_position = global_position + Vector2(BULLET_OFFSET, 0)
-		
-		#print(bullet_instance.global_position)
-		can_shoot = false
-		$ReloadTimer.start()
+	if Input.is_action_pressed("shoot"):
+		is_shooting = true
+		if can_shoot:
+			var bullet_instance = Bullet.instantiate()
+			get_tree().current_scene.add_child(bullet_instance)
+			
+			SoundManager.play_sound_rnd_pitch(ShootSound)
+			
+			if sprite.flip_h:
+				bullet_instance.flip_direction()
+				bullet_instance.global_position = global_position - Vector2(BULLET_OFFSET, 0)
+			else:	
+				bullet_instance.global_position = global_position + Vector2(BULLET_OFFSET, 0)
+			
+			#print(bullet_instance.global_position)
+			can_shoot = false
+			$ReloadTimer.start()
+	else:
+		is_shooting = false
 
 func lose_oxygen(delta):
 	if Global.oxygen_level > 0:
