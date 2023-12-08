@@ -19,12 +19,16 @@ const MAX_Y_POSITION = 205
 const MIN_Y_POSITION = OXYGEN_SHORE_LINE
 
 const BULLET_OFFSET = 7
+const PIECE_COUNT = 10
+
 const Bullet = preload("res://player/player_bullet/player_bullet.tscn")
 const ShootSound = preload("res://player/player_bullet/player_shoot.ogg")
 const OxygenFullSound = preload("res://user_interface/oxygen-bar/full_oxygen_alert.ogg")
 const OxygenRefuelSound = preload("res://player/player_refuel_oxygen.ogg")
 const SurfaceSound = preload("res://player/player_surface.ogg")
 const OxygenExplosionSound = preload("res://player/explosion.ogg")
+const ObjectPiece = preload("res://particles/object_piece/object_piece.tscn")
+const PieceTexture = preload("res://player/player_pieces.png")
 
 @onready var ReloadTimer = $ReloadTimer
 @onready var sprite = $AnimatedSprite2D
@@ -147,6 +151,16 @@ func death():
 	# Here I delete the player's death sound of the course
 	# and moved to another place because the player now (cause
 	# my modification) do differents sounds on each death
+	instance_player_pieces()
+
+func instance_player_pieces():
+	for i in range(PIECE_COUNT):
+		var piece_instance = ObjectPiece.instantiate()
+		piece_instance.texture = PieceTexture
+		piece_instance.hframes = PIECE_COUNT
+		piece_instance.frame = i
+		get_tree().current_scene.add_child(piece_instance)
+		piece_instance.global_position = global_position
 
 func _game_over():
 	queue_free()
