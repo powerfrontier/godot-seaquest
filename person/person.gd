@@ -7,6 +7,7 @@ enum states {DEFAULT, PAUSE}
 var state = states.DEFAULT
 
 const SPEED = 25
+const FULL_CREW = 7
 
 const SavingPersonSound = preload("res://person/saving_person.ogg")
 const PersonDeathSound = preload("res://person/scream.ogg")
@@ -33,7 +34,7 @@ func flip_direction():
 	
 	
 func _on_area_entered(area):
-	if area.is_in_group("Player"):
+	if area.is_in_group("Player") && Global.saved_people_count < FULL_CREW:
 		Global.saved_people_count += 1
 		GameEvent.emit_signal("update_collected_people_count")
 		Global.current_points += point_value

@@ -22,6 +22,7 @@ var state = states.DEFAULT
 
 func _ready():
 	GameEvent.connect("enemy_pause", Callable(self, "_enemy_pause"))
+	GameEvent.connect("kill_all_enemies", Callable(self, "_death"))
 
 func _process(delta):
 	if global_position.x > Global.SCREEN_BOUND_MAX_X || global_position.x < Global.SCREEN_BOUND_MIN_X:
@@ -35,13 +36,8 @@ func _physics_process(delta):
 
 func _on_area_entered(area):
 	if area.is_in_group("PlayerBullet"):
-		Global.current_points += point_value
-		GameEvent.emit_signal("update_points")
-		SoundManager.play_sound_rnd_pitch(SharkDeathSound)
-		instance_death_pieces()
-		instance_point_value_popup()
 		area.queue_free()
-		queue_free()
+		_death()
 	
 	if area.is_in_group("Player"):
 		SoundManager.play_sound(PlayerDeathSound)
@@ -80,3 +76,10 @@ func _enemy_pause(pause):
 	else:
 		state = states.DEFAULT
 
+func _death():
+	Global.current_points += point_value
+	GameEvent.emit_signal("update_points")
+	SoundManager.play_sound_rnd_pitch(SharkDeathSound)
+	instance_death_pieces()
+	instance_point_value_popup()
+	queue_free()

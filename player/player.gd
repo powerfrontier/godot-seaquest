@@ -151,6 +151,7 @@ func _on_oxygen_zone_area_entered(area):
 		else:
 			GameEvent.emit_signal("enemy_pause", true)
 			if Global.saved_people_count >= Global.MAX_CREW:
+				GameEvent.emit_signal("kill_all_enemies")
 				state = states.PEOPLE_REFUEL
 				decreasePeopleTimer.start()
 			else:
