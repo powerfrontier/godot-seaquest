@@ -13,6 +13,7 @@ config_version=5
 config/name="SeaQuest"
 run/main_scene="res://scenes/game.tscn"
 config/features=PackedStringArray("4.1", "GL Compatibility")
+config/icon="res://icon.png"
 
 [autoload]
 
@@ -24,6 +25,7 @@ SoundManager="*res://global/sound_manager/sound_manager.gd"
 
 window/size/viewport_width=256
 window/size/viewport_height=144
+window/size/mode=3
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
@@ -57,6 +59,11 @@ move_down={
 shoot={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":32,"key_label":0,"unicode":32,"echo":false,"script":null)
+]
+}
+exit={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194305,"key_label":0,"unicode":0,"echo":false,"script":null)
 ]
 }
 
