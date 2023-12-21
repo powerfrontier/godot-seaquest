@@ -9,6 +9,10 @@ var oxygen_level = 100
 var current_points = 0
 var highscore = 0
 
+func _ready():
+	var file = FileAccess.open("user://highscore.dat", FileAccess.READ)
+	highscore = file.get_32()
+
 func _process(delta):
 	if Input.is_action_pressed("exit"):
 		get_tree().quit()

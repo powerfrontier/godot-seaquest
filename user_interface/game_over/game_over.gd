@@ -23,6 +23,8 @@ func _game_over_screen():
 	score_label.text = "Score " + str(Global.current_points)
 	if Global.current_points > Global.highscore:
 		Global.highscore = Global.current_points
+		var file = FileAccess.open("user://highscore.dat", FileAccess.WRITE)
+		file.store_32(Global.current_points)
 	highscore.text = "Highscore "  + str(Global.highscore)
 
 func _on_game_over_delay_timeout():
